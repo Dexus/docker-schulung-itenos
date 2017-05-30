@@ -1,0 +1,2 @@
+Erstelle eine Docker-Compose File, aus dem zuvor in der Aufgabe Docker erstellten Container und Configurationen.
+Richte die Scalierung für den SSL-Offload Server direkt in der Compose File mit ein.

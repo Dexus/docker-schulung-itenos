@@ -1,0 +1,1 @@
+docker run --name loadbalancer --link sslproxy -p 80:80 -p 443:443 -v ./nginx.conf:/etc/nginx/nginx.conf:ro -d nginx:alpine

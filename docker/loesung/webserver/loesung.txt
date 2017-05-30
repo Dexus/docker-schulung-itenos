@@ -1,0 +1,7 @@
+git clone https://github.com/gabrielecirulli/2048.git ./src
+
+docker run --name webserver -v ./src:/usr/share/nginx/html:ro -d nginx:alpine
+
+alternativ:
+
+docker run --name webserver -d alexwhen/docker-2048

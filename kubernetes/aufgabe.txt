@@ -1,0 +1,20 @@
+Dies ist nicht in einer VM möglich die keine VT-x unterstützt...
+
+
+https://kubernetes.io/docs/tasks/tools/install-minikube/
+
+https://www.virtualbox.org/wiki/Linux_Downloads
+
+https://kubernetes.io/docs/getting-started-guides/minikube/
+
+Erstelle ein Webserver mit dem Image "alexwhen/docker-2048"
+Erstelle ein SSLProxy und Loadbalancer mit Image "nginx:alpine"
+
+Erstelle für den Webserver, SSLProxy und Loadbalancer jeweils ein Service für die kommunikation untereinander.
+
+Erstelle eine ConfigMap für SSLProxy und Loadbalancer um die Config für Nginx vorzunehmen.
+
+https://kubernetes.io/docs/concepts/services-networking/connect-applications-service/
+https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/
+https://kubernetes.io/docs/tasks/configure-pod-container/configmap/
+https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/

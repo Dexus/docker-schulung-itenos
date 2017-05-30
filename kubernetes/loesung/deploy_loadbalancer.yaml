@@ -1,0 +1,96 @@
+# A headless service to create DNS records
+apiVersion: v1
+kind: Service
+metadata:
+  name: loadbalancer
+  labels:
+    app: loadbalancer
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    nodePort: 30080
+    targetPort: 80
+    name: http
+  - port: 8443
+    nodePort: 30443
+    targetPort: 443
+    name: https
+  # *.webserver.default.svc.cluster.local
+  selector:
+    app: loadbalancer
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: loadbalancer-config
+  namespace: default
+data:
+  nginx.conf: |
+    user  nginx;
+    worker_processes  1;
+
+    error_log  /var/log/nginx/error.log warn;
+    pid        /var/run/nginx.pid;
+
+
+    events {
+        worker_connections  1024;
+    }
+
+
+    stream {
+        upstream web_server_80 {
+            # add the host and port here
+            # ssl-proxy is the hostname for the ssl-proxy and after scale it resolve to all container ips
+            server sslproxy.default.svc.cluster.local:80;
+        }
+        upstream web_server_443 {
+            # add the ssl host and port here
+            # ssl-proxy is the hostname for the ssl-proxy and after scale it resolve to all container ips
+            server sslproxy.default.svc.cluster.local:443;
+        }
+
+
+        server {
+            listen 80;
+            proxy_pass web_server_80;
+        }
+        server {
+            listen 443;
+            proxy_pass web_server_443;
+        }
+    }
+
+---
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: loadbalancer
+spec:
+  serviceName: "loadbalancer"
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: loadbalancer
+    spec:
+      terminationGracePeriodSeconds: 0
+      containers:
+      - name: loadbalancer
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+          name: http
+        - containerPort: 443
+          name: https
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+      volumes:
+        - name: config-volume
+          configMap:
+            # Provide the name of the ConfigMap containing the files you want
+            # to add to the container
+            name: loadbalancer-config

@@ -1,0 +1,35 @@
+# A headless service to create DNS records
+apiVersion: v1
+kind: Service
+metadata:
+  name: webserver
+  labels:
+    app: webserver
+spec:
+  ports:
+  - port: 80
+    name: web
+  # *.webserver.default.svc.cluster.local
+  clusterIP: None
+  selector:
+    app: webserver
+---
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: webserver
+spec:
+  serviceName: "webserver"
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: webserver
+    spec:
+      terminationGracePeriodSeconds: 0
+      containers:
+      - name: webserver
+        image: alexwhen/docker-2048
+        ports:
+        - containerPort: 80
+          name: web

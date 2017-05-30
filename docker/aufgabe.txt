@@ -1,0 +1,33 @@
+1. Pulle das Image "nginx:apline" vom Docker Hub.
+https://hub.docker.com/_/nginx/
+
+Wir erstellen nun die Config Files für die verschiedenen Systeme "Loadbalancer, SSL-Offload, Webserver"
+
+https://www.nginx.com/resources/admin-guide/tcp-load-balancing/
+
+2. Erstelle eine Nginx Config für den Loadbalancer
+Siehe hier zu bitte in die Nginx Dokumentation.
+https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html
+https://nginx.org/en/docs/stream/ngx_stream_proxy_module.html
+
+3. Erstelle eine Nginx Config für den SSl-Offload und erstelle ein SSL Zertifikat
+https://nginx.org/en/docs/http/ngx_http_upstream_module.html
+https://nginx.org/en/docs/http/ngx_http_v2_module.html
+https://nginx.org/en/docs/http/ngx_http_proxy_module.html
+https://nginx.org/en/docs/http/ngx_http_ssl_module.html
+
+
+4. Erstelle eine Nginx Config für den Webserver, falls nötig.
+Und verwende den Content von https://github.com/gabrielecirulli/2048
+
+Alternativ:  Nutze "alexwhen/docker-2048"
+
+5. Starte den Webserver
+
+6. Starte einen SSL-Offload Server und linke Ihn mit dem Webserver aus Nummer 5.
+
+7. Starte den Loadbalancer und linke Ihn mit dem SSL-Offload Server aus Nummer 6.
+
+HINWEIS: Achte dabei das du wenn du die Container startest Ihnen eindeutige Namen zu geben, so das du den Namen als Host in den Configs nutzen kannst.
+
+https://serversforhackers.com/tcp-load-balancing-with-nginx-ssl-pass-thru

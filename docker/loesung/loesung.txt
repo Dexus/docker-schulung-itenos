@@ -1,0 +1,3 @@
+docker pull nginx:alpine
+
+führe loesung.txt per webserver,ssl-proxy und loadbalancer aus.

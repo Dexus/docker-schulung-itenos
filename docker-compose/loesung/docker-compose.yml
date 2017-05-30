@@ -1,0 +1,56 @@
+version: '3'
+services:
+  loadbalancer:
+    image: nginx:alpine
+    depends_on:
+      - webserver
+      - sslproxy
+    volumes:
+      - "../../docker/loesung/loadbalancer/nginx.conf:/etc/nginx/nginx.conf:ro"
+    links:
+      - sslproxy
+    ports:
+      - "7080:80"
+      - "7443:443"
+    expose:
+      - "80"
+      - "443"
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: always
+  sslproxy:
+    image: nginx:alpine
+    expose:
+      - "80"
+      - "443"
+    depends_on:
+      - webserver
+    links:
+      - webserver
+    volumes:
+      - "../../docker/loesung/sslproxy/nginx.conf:/etc/nginx/nginx.conf:ro"
+      - "../../docker/loesung/sslproxy/example_ssl:/etc/ssl/example:ro"
+    deploy:
+      replicas: 6
+      update_config:
+        parallelism: 2
+        delay: 10s
+      restart_policy:
+        condition: always
+  webserver:
+    image: nginx:alpine
+    expose:
+      - "80"
+    volumes:
+      - "../../docker/loesung/webserver/src:/usr/share/nginx/html:ro"
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: always
